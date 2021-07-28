@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
+import '../../../src/index.css';
 
 class Searchbar extends Component {
   state = {
@@ -8,18 +8,12 @@ class Searchbar extends Component {
   };
 
   handleChange = e => {
-    this.setState({ query: e.currentTarget.value.toLowerCase() });
+    const { value } = e.target;
+    this.setState({ query: value });
   };
-
   handleSubmit = e => {
-    const { query } = this.state;
     e.preventDefault();
-
-    if (query.trim() === '') {
-      toast.error('Type something to find');
-      return;
-    }
-    this.props.onSubmit(query);
+    this.props.onSubmit(this.state.query);
     this.setState({ query: '' });
   };
 
@@ -37,8 +31,8 @@ class Searchbar extends Component {
               className="SearchForm-input"
               type="text"
               value={query}
-              autocomplete="off"
-              autofocus
+              autoComplete="off"
+              autoFocus
               placeholder="Search images and photos"
               onChange={this.handleChange}
             />

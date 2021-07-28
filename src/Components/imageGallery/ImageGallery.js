@@ -1,34 +1,19 @@
-import React, { Component } from 'react';
-import api from '../../services/api';
+import React from 'react';
+import PropTypes from 'prop-types';
+import ImageGalleryItem from './imageGalleryItem/ImageGalleryItem';
+import '../../../src/index.css';
 
-class ImageGallery extends Component {
-  state = {
-    images: [],
-    page: 1,
-    error: null,
-    showModal: false,
-    modalProps: { url: '', alt: '' },
-    status: 'idle',
-  };
-  render() {
-    const { images, error, status, showModal } = this.state;
-    const { url, alt } = this.modalProps;
+const ImageGallery = ({ images, onSelect }) => (
+  <ul className="ImageGallery">
+    {images.map(image => {
+      return <ImageGalleryItem key={image.id} {...image} onSelect={onSelect} />;
+    })}
+  </ul>
+);
 
-    return (
-      <ul className="ImageGallery">
-        {images.map(
-          ({ id, webformatURL, tags, largeImageURL }) => 9,
-          //     <ImageGalleryItem
-          //     key={id}
-          //     src={webformatURL}
-          //     url={largeImageURL}
-          //     alt={tags}
-          //     openModal={this.handleImgClick}
-          //   />
-        )}
-      </ul>
-    );
-  }
-}
+ImageGallery.propTypes = {
+  images: PropTypes.arrayOf(PropTypes.object),
+  onSelect: PropTypes.func.isRequired,
+};
 
 export default ImageGallery;
