@@ -19,26 +19,51 @@ class App extends Component {
     largeImageURL: {},
   };
 
-  componentDidUpdate(prevState) {
+  // componentDidMount() {
+  //
+  // }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.query !== this.state.query) {
+      this.fetchArticles(this.state.query, this.state.page);
+    }
+    if (prevState.page !== this.state.page) {
+      this.fetchArticles(this.state.query, this.state.page);
+    }
     if (prevState.images !== this.state.images) {
-      window.scrollTo({
-        top: document.body.scrollHeight,
-        behavior: 'smooth',
-      });
     }
   }
+  fetchArticles = (query, page) => {
+    if (query !== undefined) {
+      this.setState({ isLoading: true });
+      fetchImages(query, page)
+        .then(images =>
+          this.setState(prevState => ({
+            images: page === 1 ? [...images] : [...prevState.images, ...images],
+          })),
+        )
+        .catch(error => this.setState({ error }))
+        .finally(() => {
+          this.setState({ isLoading: false });
+          window.scrollTo({
+            top: document.documentElement.scrollHeight,
+            behavior: 'smooth',
+          });
+          // console.log("scroll");
+        });
+    }
+  };
 
-  loadMore = async () => {
-    const images = await fetchImages(this.state.query, this.state.page);
+  loadMore = () => {
+    // const images = await fetchImages(this.state.query, this.state.page);
     this.setState(prev => ({
-      images: [...prev.images, ...images.hits],
       page: prev.page + 1,
     }));
   };
 
-  onSubmit = async query => {
-    const images = await fetchImages(query);
-    this.setState({ query: query, images: images.hits, page: 2 });
+  onSubmit = query => {
+    // const images = await fetchImages(query);
+    this.setState({ query: query, page: 1 });
   };
 
   toggleModal = () => this.setState({ showModal: !this.state.showModal });
